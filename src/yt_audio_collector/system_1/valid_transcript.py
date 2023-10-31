@@ -1,7 +1,7 @@
 import re
 from typing import List
 
-from constants import HINDI_RE_PATTERN
+from src.yt_audio_collector.constants import HINDI_RE_PATTERN
 from src.yt_audio_collector.system_1.video_to_audio import duration_of_video
 
 

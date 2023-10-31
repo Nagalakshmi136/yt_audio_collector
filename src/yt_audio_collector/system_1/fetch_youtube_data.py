@@ -5,7 +5,7 @@ from typing import List
 
 from youtube_transcript_api import YouTubeTranscriptApi
 from src.yt_audio_collector.system_1.valid_transcript import is_valid_hindi_transcript
-from constants import BASE_PATH
+from src.yt_audio_collector.constants import BASE_PATH
 from src.yt_audio_collector.system_1.video_to_audio import has_hindi_audio
 from src.yt_audio_collector.utils.file_utils import create_dir
 

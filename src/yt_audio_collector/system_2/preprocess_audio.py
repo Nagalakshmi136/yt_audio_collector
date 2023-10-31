@@ -15,7 +15,7 @@ import soundfile as sf
 from pydub import AudioSegment
 
 sys.path.append("..")
-from yt_audio_collector.utils.file_utils import (create_dir, load_json,
+from src.yt_audio_collector.utils.file_utils import (create_dir, load_json,
                                                  resolve_path)
 
 BASE_PATH = Path(os.getcwd()).parent
@@ -98,7 +98,7 @@ class PreProcessAudio:
         S_filter = librosa.decompose.nn_filter(S_full,
                                             aggregate=np.median,
                                             metric='cosine',
-                                            width=int(librosa.time_to_frames(2, sr=sr)))
+                                            width=int(librosa.time_to_frames(1, sr=sr)))
 
         # The output of the filter shouldn't be greater than the input
         # if we assume signals are additive.  Taking the pointwise minimium
@@ -187,6 +187,7 @@ class PreProcessAudio:
                     for subtitle in subtitles:
                         start_time = subtitle.get("start") * 1000
                         end_time = start_time + subtitle.get("duration") * 1000
+                        print(start_time,end_time,subtitle.get('duration')*1000)
                         chunk = audio[start_time:end_time]
                         chunk_name = f"{audio_id}_{start_time}_{end_time}"
                         chunk_path = f"{self.temp}/{chunk_name}"
