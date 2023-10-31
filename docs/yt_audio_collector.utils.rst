@@ -1,5 +1,5 @@
-yt\_audio\_collector.utils package
-==================================
+Utils package
+=============
 
 Submodules
 ----------

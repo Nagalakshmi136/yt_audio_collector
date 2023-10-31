@@ -1,5 +1,5 @@
-yt\_audio\_collector.system\_1 package
-======================================
+System 1 package
+================
 
 Submodules
 ----------

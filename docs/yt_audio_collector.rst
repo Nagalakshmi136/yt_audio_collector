@@ -1,5 +1,5 @@
-yt\_audio\_collector package
-============================
+Youtube Audio Collector package
+================================
 
 Subpackages
 -----------
