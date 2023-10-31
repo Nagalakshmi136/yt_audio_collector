@@ -18,7 +18,7 @@ sys.path.append("..")
 from src.yt_audio_collector.utils.file_utils import (create_dir, load_json,
                                                  resolve_path)
 
-BASE_PATH = Path(os.getcwd()).parent
+from src.yt_audio_collector.constants import BASE_PATH
 
 
 class PreProcessAudio:
@@ -29,7 +29,7 @@ class PreProcessAudio:
     """
 
     def __init__(
-        self, source_path: str, destination_path: str, background_sound: bool = False
+        self, source_path: str =  f"{BASE_PATH}/output", destination_path: str = f"{BASE_PATH}/processed_output", background_sound: bool = False
     ) -> None:
         """
         Initializes the PreProcessAudio class.

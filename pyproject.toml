@@ -19,6 +19,7 @@ ffmpeg = "^1.4"
 youtube-transcript-api = "^0.6.1"
 pydub = "^0.25.1"
 plotly = "^5.17.0"
+librosa = "^0.10.1"
 
 
 [build-system]

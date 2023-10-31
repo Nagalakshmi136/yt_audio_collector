@@ -1,51 +1,44 @@
+# yt_audio_collector
+
+*yt_audio_collector* is a genuine, lightweight library for creating hindi dataset for speech recognition.
+
+## Documentation
+
+Detailed documentation about the usage of the library can be found at [yt_audio_collector.io](https://yt_audio_collector.io). This is recommended for most cases. If you want to hastily download a single video, the [quick start](#Quickstart) guide below might be what you're looking for.
+
+## Description
+
+YouTube is the most popular video-sharing platform in the world and as a machine learning engineer or AI engineer, you may encounter a situation where you want to script something to create datasets for training speech recognition models in any 
+particular language for this we need audio and transcripts in that language.
+For this, I present to you: *yt_audio_collector*.
+
 ## Quickstart
 
-This guide will walk you through the basic usage of hindi-dataset.
+This guide covers the most basic usage of the library. For more detailed information, please refer to [yt_audio_collector.io](https://yt_audio_collector.io).
 
-Let's get started with some examples.
+### Installation
 
-## Preparing the Hindi transcript and audio
+yt_audio_collector requires an installation of Python 3.6 or greater, as well as pip. (Pip is typically bundled with Python [installations](https://python.org/downloads).)
 
-Begin with importing the fetch_youtube_data module from the 
-hindi_dataset/yt_audio_collector/transcript_audio module::
-    
-    >>> from hindi_dataset.yt_audio_collector.transcript_audio import fetch_youtube_data
+To install from PyPI with pip:
 
-Fetch_youtube_data contains a method get_valid_video_ids 
-helps to get the video IDs that have Hindi audio and Hindi transcript of the
-relevant videos for the given query and store the Hindi transcript and Hindi audio
-with the query name inside the audio folder in the current project::
+```bash
+$ python -m pip install yt_audio_collector
+```
 
-    >>> video_ids = fetch_youtube_data.get_valid_video_ids('cricket news in hindi')
+Sometimes, the PyPI release becomes slightly outdated. To install from the source with pip:
 
-## Preprocessing Hindi audio
-
-Begin with importing PreProcessAudio class from hindi_dataset/yt_audio_collector/system_2/preprocess_audio::
-
-    >>> from hindi_dataset.yt_audio_collector.system_2.preprocess_audio import PreProcessAudio
-
-To preprocessing the Hindi audio stored in audio folder, Use the preprocess_audio method of PreProcessAudio class
-which take 3 arguments:
-
-1. Source location of the audio files which need to be process.
-2. Destination location of the audio files after preprocessing.
-3. Enable or Disable the background sound(default value is False(Enable)).
-
-    >>> PreProcessAudio(source_path, destination_path, background_sound).preprocess_audio()
-
-## Remember!
-
-   For disabling the background sound of the audio we need to use the spleeter library
-   which can be installed with:
-
-       $ pip install spleeter
-
-   This spleeter library only supports the older version of protobuf library(i.e. 3.2 or lower) which can be installed with:
-
-       $ pip install protobuf==3.2
-        
+```bash
+$ python -m pip install git+https://github.com/yt_audio_collector/yt_audio_collector
+```
+### Using yt_audio_collector in a Python script
 
 
-
-
+```python
+ >>> from yt_audio_collector.system_1.fetch_youtube_data import FetchValidYouTubeData
+ >>> yt_data = FetchValidYouTubeData()
+ >>> video_ids = yt_data.get_valid_video_ids('cricket news in hindi')
+ >>> from yt_audio_collector.system_2.preprocess_audio import PreProcessAudio
+ >>> PreProcessAudio(source_path, destination_path, background_sound).preprocess_audio()
+```
 
