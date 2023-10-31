@@ -1,0 +1,26 @@
+[tool.poetry]
+name = "yt_audio_collector"
+version = "0.1.0"
+description = "Create any language dataset for Speech Recognition from youtube"
+authors = ["Mannasamudram Nagalakshmi"]
+readme = "README.md"
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+]
+
+[tool.poetry.dependencies]
+python = "^3.10"
+google-api-python-client = "^2.98.0"
+whisper = "^1.1.10"
+pytube = "^15.0.0"
+ffmpeg = "^1.4"
+youtube-transcript-api = "^0.6.1"
+pydub = "^0.25.1"
+plotly = "^5.17.0"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
