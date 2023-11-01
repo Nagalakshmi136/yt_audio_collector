@@ -1,6 +1,6 @@
 # yt_audio_collector
 
-*yt_audio_collector* is a genuine, lightweight library for creating hindi dataset for speech recognition.
+*yt_audio_collector* is a genuine, lightweight library for creating hindi dataset for speech recognition from youtube.
 
 ## Documentation
 
@@ -29,7 +29,7 @@ $ python -m pip install yt_audio_collector
 Sometimes, the PyPI release becomes slightly outdated. To install from the source with pip:
 
 ```bash
-$ python -m pip install git+https://github.com/yt_audio_collector/yt_audio_collector
+$ python -m pip install git+https://github.com/Nagalakshmi136/yt_audio_collector
 ```
 ### Using yt_audio_collector in a Python script
 
@@ -42,3 +42,16 @@ $ python -m pip install git+https://github.com/yt_audio_collector/yt_audio_colle
  >>> PreProcessAudio(source_path, destination_path, background_sound).preprocess_audio()
 ```
 
+## Cloning the repository
+
+Clone the repository through the terminal using the command below:
+
+```shell
+git clone https://github.com/Nagalakshmi136/yt_audio_collector.git
+```
+
+After cloning install the required packages to run the project by using the poetry using the following command below:
+
+```bash
+$ poetry install
+```
