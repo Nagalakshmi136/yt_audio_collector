@@ -13,13 +13,13 @@ classifiers = [
 [tool.poetry.dependencies]
 python = "^3.10"
 google-api-python-client = "^2.98.0"
-whisper = "^1.1.10"
 pytube = "^15.0.0"
 ffmpeg = "^1.4"
 youtube-transcript-api = "^0.6.1"
 pydub = "^0.25.1"
 plotly = "^5.17.0"
 librosa = "^0.10.1"
+openai-whisper = "^20230918"
 
 
 [build-system]
