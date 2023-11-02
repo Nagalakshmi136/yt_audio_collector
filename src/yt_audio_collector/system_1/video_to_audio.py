@@ -68,7 +68,7 @@ def store_audio(query: str, audio_path: Path) -> None:
     audio_path: `Path`
         The path of the audio file.
     """
-    destination_path = BASE_PATH / "audio" / query.replace(" ", "_") / audio_path.name
+    destination_path = BASE_PATH / "output" / query.replace(" ", "_") / audio_path.name
     if not destination_path.parent.exists():
         destination_path.parent.mkdir(parents=True)
     os.replace(audio_path, destination_path)

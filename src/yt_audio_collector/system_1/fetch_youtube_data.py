@@ -93,7 +93,7 @@ class FetchValidYouTubeData():
         # for all the transcripts with the query name in audio folder
         if transcript_results:
             with open(
-                f"{BASE_PATH}/audio/{query}/{query}.json", "w", encoding="utf-8"
+                f"{BASE_PATH}/output/{query}/{query}.json", "w", encoding="utf-8"
             ) as json_file:
                 json.dump(transcript_results, json_file, indent=4, ensure_ascii=False)
 

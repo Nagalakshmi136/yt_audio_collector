@@ -4,7 +4,7 @@
 
 ## Documentation
 
-Detailed documentation about the usage of the library can be found at [yt_audio_collector.io](https://yt_audio_collector.io). This is recommended for most cases. If you want to hastily download a single video, the [quick start](#Quickstart) guide below might be what you're looking for.
+Detailed documentation about the usage of the library can be found at [yt_audio_collector](https://github.com/Nagalakshmi136/yt_audio_collector/tree/master/docs). This is recommended for most cases. If you want to hastily download a single video, the [quick start](#Quickstart) guide below might be what you're looking for.
 
 ## Description
 
@@ -14,7 +14,7 @@ For this, I present to you: *yt_audio_collector*.
 
 ## Quickstart
 
-This guide covers the most basic usage of the library. For more detailed information, please refer to [yt_audio_collector.io](https://yt_audio_collector.io).
+This guide covers the most basic usage of the library. For more detailed information, please refer to [yt_audio_collector.io](http://127.0.0.1:5500/docs/_build/html/index.html).
 
 ### Installation
 
@@ -50,8 +50,10 @@ Clone the repository through the terminal using the command below:
 git clone https://github.com/Nagalakshmi136/yt_audio_collector.git
 ```
 
-After cloning install the required packages to run the project by using the poetry using the following command below:
+To install all the libraries in the pyproject.toml file of a cloned project, you should run the following command:
 
-```bash
-$ poetry install
-```
+    $ poetry install
+
+To execute the code run the command:
+
+    $ python main.py
