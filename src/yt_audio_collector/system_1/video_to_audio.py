@@ -126,6 +126,7 @@ def has_hindi_audio(video_id: str, query: str) -> bool:
     """
     audio_file = convert_video_to_audio(video_id)
     audio_language = get_audio_language(audio_file)
+    # print(audio_language)
 
     if audio_language.lower() in ["hi"]:
         store_audio(query, audio_file)
