@@ -1,5 +1,5 @@
-src
-===
+Youtube Audio Collector
+=======================
 
 .. toctree::
    :maxdepth: 4

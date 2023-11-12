@@ -9,7 +9,7 @@ from pathlib import Path
 import whisper
 from pytube import YouTube
 
-from src.yt_audio_collector.constants import BASE_PATH, BASE_URL
+from yt_audio_collector.constants import BASE_PATH, BASE_URL
 
 
 def get_audio_language(audio_path: str) -> str:

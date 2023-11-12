@@ -1,8 +1,8 @@
 import re
 from typing import List
 
-from src.yt_audio_collector.constants import HINDI_RE_PATTERN
-from src.yt_audio_collector.system_1.video_to_audio import duration_of_video
+from yt_audio_collector.constants import HINDI_RE_PATTERN
+from yt_audio_collector.system_1.video_to_audio import duration_of_video
 
 
 def is_valid_hindi_transcript(transcript: List[dict], video_id: str) -> bool:

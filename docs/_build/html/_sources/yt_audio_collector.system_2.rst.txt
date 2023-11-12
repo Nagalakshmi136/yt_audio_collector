@@ -7,7 +7,7 @@ Submodules
 yt\_audio\_collector.system\_2.preprocess\_audio module
 -------------------------------------------------------
 
-.. automodule:: src.yt_audio_collector.system_2.preprocess_audio
+.. automodule:: yt_audio_collector.system_2.preprocess_audio
    :members:
    :undoc-members:
    :show-inheritance:
@@ -15,7 +15,7 @@ yt\_audio\_collector.system\_2.preprocess\_audio module
 Module contents
 ---------------
 
-.. automodule:: src.yt_audio_collector.system_2
+.. automodule:: yt_audio_collector.system_2
    :members:
    :undoc-members:
    :show-inheritance:

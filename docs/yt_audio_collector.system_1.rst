@@ -7,7 +7,7 @@ Submodules
 yt\_audio\_collector.system\_1.fetch\_youtube\_data module
 ----------------------------------------------------------
 
-.. automodule:: src.yt_audio_collector.system_1.fetch_youtube_data
+.. automodule:: yt_audio_collector.system_1.fetch_youtube_data
    :members:
    :undoc-members:
    :show-inheritance:
@@ -15,7 +15,7 @@ yt\_audio\_collector.system\_1.fetch\_youtube\_data module
 yt\_audio\_collector.system\_1.valid\_transcript module
 -------------------------------------------------------
 
-.. automodule:: src.yt_audio_collector.system_1.valid_transcript
+.. automodule:: yt_audio_collector.system_1.valid_transcript
    :members:
    :undoc-members:
    :show-inheritance:
@@ -23,7 +23,7 @@ yt\_audio\_collector.system\_1.valid\_transcript module
 yt\_audio\_collector.system\_1.video\_to\_audio module
 ------------------------------------------------------
 
-.. automodule:: src.yt_audio_collector.system_1.video_to_audio
+.. automodule:: yt_audio_collector.system_1.video_to_audio
    :members:
    :undoc-members:
    :show-inheritance:
@@ -31,7 +31,7 @@ yt\_audio\_collector.system\_1.video\_to\_audio module
 Module contents
 ---------------
 
-.. automodule:: src.yt_audio_collector.system_1
+.. automodule:: yt_audio_collector.system_1
    :members:
    :undoc-members:
    :show-inheritance:

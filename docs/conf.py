@@ -7,7 +7,7 @@ import sphinx_rtd_theme
 
 sys.path.insert(0, os.path.abspath("../"))
 
-from src.yt_audio_collector import __version__  # noqa
+from yt_audio_collector import __version__  # noqa
 
 # -- General configuration ------------------------------------------------
 

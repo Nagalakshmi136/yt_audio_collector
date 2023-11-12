@@ -7,7 +7,7 @@ Submodules
 yt\_audio\_collector.utils.file\_utils module
 ---------------------------------------------
 
-.. automodule:: src.yt_audio_collector.utils.file_utils
+.. automodule:: yt_audio_collector.utils.file_utils
    :members:
    :undoc-members:
    :show-inheritance:
@@ -15,7 +15,7 @@ yt\_audio\_collector.utils.file\_utils module
 Module contents
 ---------------
 
-.. automodule:: src.yt_audio_collector.utils
+.. automodule:: yt_audio_collector.utils
    :members:
    :undoc-members:
    :show-inheritance:

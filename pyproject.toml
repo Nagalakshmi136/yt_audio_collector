@@ -20,8 +20,10 @@ pydub = "^0.25.1"
 plotly = "^5.17.0"
 librosa = "^0.10.1"
 openai-whisper = "^20230918"
-torch = "2.0.1"
 pytest = "^7.4.3"
+torch = [
+  {url = "https://download.pytorch.org/whl/cu117/torch-2.0.0%2Bcu117-cp39-cp39-linux_x86_64.whl"},
+]
 
 
 [build-system]

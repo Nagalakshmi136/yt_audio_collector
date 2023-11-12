@@ -15,10 +15,10 @@ import soundfile as sf
 from pydub import AudioSegment
 
 sys.path.append("..")
-from src.yt_audio_collector.utils.file_utils import (create_dir, load_json,
+from yt_audio_collector.utils.file_utils import (create_dir, load_json,
                                                  resolve_path)
 
-from src.yt_audio_collector.constants import BASE_PATH
+from yt_audio_collector.constants import BASE_PATH
 
 
 class PreProcessAudio:
