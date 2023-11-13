@@ -10,7 +10,7 @@ sys.path.insert(0, os.path.abspath("../"))
 from yt_audio_collector import __version__  # noqa
 
 # -- General configuration ------------------------------------------------
-
+autodoc_mock_imports = ["librosa", "youtube_transcript_api", "whisper","pytube","pydub","soundfile"]
 extensions = [
     "sphinx.ext.autodoc",
     "sphinx.ext.autosummary",
