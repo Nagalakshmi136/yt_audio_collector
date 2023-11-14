@@ -22,14 +22,14 @@ Once you have a copy of the source, you can embed it in your Python package, or 
 
     $ cd yt_audio_collector
     
-After cloning create an environment then install python=3.9 version. For example with conda:
+After cloning create an environment then install python=3.9 version. For example with conda::
 
     $ conda create -n sample python=3.9
 
-To install all the libraries in the pyproject.toml file of a cloned project, you should run the following command:
+To install all the libraries in the pyproject.toml file of a cloned project, you should run the following command::
 
     $ poetry install
 
-To execute the code run the command:
+To execute the code run the command::
 
     $ python main.py

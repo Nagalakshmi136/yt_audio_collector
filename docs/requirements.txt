@@ -1,6 +1,1 @@
 furo==2021.11.16
-nbsphinx
-sphinx_gallery
-sphinx_rtd_theme
-markupsafe==2.0.1
-jinja2>=3.0
