@@ -1,7 +1,9 @@
-import os
 import json
-import pytest
+import os
 from pathlib import Path
+
+import pytest
+
 from yt_audio_collector.system_2.preprocess_audio import PreProcessAudio
 
 

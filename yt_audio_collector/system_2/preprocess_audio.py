@@ -9,16 +9,14 @@ import os
 import sys
 from pathlib import Path
 
+sys.path.append("..")
 import librosa
 import numpy as np
 import soundfile as sf
 from pydub import AudioSegment
 
-sys.path.append("..")
-from yt_audio_collector.utils.file_utils import (create_dir, load_json,
-                                                 resolve_path)
-
 from yt_audio_collector.constants import BASE_PATH
+from yt_audio_collector.utils.file_utils import create_dir, load_json, resolve_path
 
 
 class PreProcessAudio:
@@ -29,7 +27,10 @@ class PreProcessAudio:
     """
 
     def __init__(
-        self, source_path: str =  f"{BASE_PATH}/output", destination_path: str = f"{BASE_PATH}/processed_output", background_sound: bool = False
+        self,
+        source_path: str = f"{BASE_PATH}/output",
+        destination_path: str = f"{BASE_PATH}/processed_output",
+        background_sound: bool = False,
     ) -> None:
         """
         Initializes the PreProcessAudio class.
@@ -51,8 +52,10 @@ class PreProcessAudio:
         self.temp = create_dir(BASE_PATH / "temp")
         self.source_path = Path(source_path)
 
-    def get_file_name(self, total_file_path: Path) -> str:
-        """Finds the file name without extension from absolute file path
+    @staticmethod
+    def get_file_name(total_file_path: Path) -> str:
+        """
+        Finds the file name without extension from absolute file path
 
         Parameters:
         -----------
@@ -77,10 +80,10 @@ class PreProcessAudio:
             The path of the audio file.
         """
         # Load an example with vocals.
-        y, sr = librosa.load(f'{chunk_path}.wav')
+        audio_signal, sample_rate = librosa.load(f"{chunk_path}.wav")
 
         # And compute the spectrogram magnitude and phase
-        S_full, phase = librosa.magphase(librosa.stft(y))
+        s_full, phase = librosa.magphase(librosa.stft(audio_signal))
         # The wiggly lines above are due to the vocal component.
         # Our goal is to separate them from the accompanying
         # instrumentation.
@@ -95,15 +98,17 @@ class PreProcessAudio:
         # This suppresses sparse/non-repetetitive deviations from the average spectrum,
         # and works well to discard vocal elements.
 
-        S_filter = librosa.decompose.nn_filter(S_full,
-                                            aggregate=np.median,
-                                            metric='cosine',
-                                            width=int(librosa.time_to_frames(0.1, sr=sr)))
+        s_filter = librosa.decompose.nn_filter(
+            s_full,
+            aggregate=np.median,
+            metric="cosine",
+            width=int(librosa.time_to_frames(0.1, sr=sample_rate)),
+        )
 
         # The output of the filter shouldn't be greater than the input
         # if we assume signals are additive.  Taking the pointwise minimium
         # with the input spectrum forces this.
-        S_filter = np.minimum(S_full, S_filter)
+        s_filter = np.minimum(s_full, s_filter)
         # The raw filter output can be used as a mask,
         # but it sounds better if we use soft-masking.
 
@@ -112,16 +117,18 @@ class PreProcessAudio:
         margin_v = 10
         power = 2
 
-        mask_v = librosa.util.softmask(S_full - S_filter,
-                                    margin_v * S_filter,
-                                    power=power)
+        mask_v = librosa.util.softmask(
+            s_full - s_filter, margin_v * s_filter, power=power
+        )
 
         # Once we have the masks, simply multiply them with the input spectrum
         # to separate the components
 
-        S_foreground = mask_v * S_full
-        new_y = librosa.istft(S_foreground*phase)
-        sf.write(f'{self.temp}/vocals.wav',new_y,samplerate=sr,subtype='PCM_24')
+        s_foreground = mask_v * s_full
+        new_y = librosa.istft(s_foreground * phase)
+        sf.write(
+            f"{self.temp}/vocals.wav", new_y, samplerate=sample_rate, subtype="PCM_16"
+        )
 
     def resample(self, chunk_path: str, destination_chunk_path: str) -> None:
         """
@@ -143,6 +150,7 @@ class PreProcessAudio:
         vocals_audio = vocals_audio.set_channels(self.channels)
         vocals_audio.export(f"{destination_chunk_path}.wav", format="wav")
 
+    # pylint: disable=too-many-locals
     def preprocess_audio_chunks(self, category_path: str) -> None:
         """
         Divides the audio into chunks based on the transcriptions and preprocess the audio chunks.
@@ -180,7 +188,7 @@ class PreProcessAudio:
                 subtitles = subtitles_data[audio_id]
 
                 with open(
-                    f"{destination_audio_path}/subtitles.txt", "w"
+                    f"{destination_audio_path}/subtitles.txt", "w", encoding="utf-8"
                 ) as file_writer:
                     csv_writer = csv.writer(file_writer)
 
@@ -222,4 +230,3 @@ class PreProcessAudio:
         for category_path in self.source_path.glob("*"):
             category_name = category_path.name
             self.preprocess_audio_chunks(category_name)
-

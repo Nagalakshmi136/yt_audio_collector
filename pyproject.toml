@@ -9,6 +9,7 @@ classifiers = [
     "License :: OSI Approved :: MIT License",
     "Operating System :: OS Independent",
 ]
+packages=[{include = "yt_audio_collector"}]
 
 [tool.poetry.dependencies]
 python = "^3.9"

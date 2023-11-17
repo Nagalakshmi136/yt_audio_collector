@@ -39,6 +39,7 @@ def get_audio_language(audio_path: str) -> str:
     detected_language = max(probs, key=probs.get)
     return detected_language
 
+
 def duration_of_video(video_id: str) -> int:
     """
     Gets the duration of the video in seconds using the pytube library.

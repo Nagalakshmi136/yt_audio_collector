@@ -1,3 +1,4 @@
+# pylint: disable=line-too-long, redefined-builtin, import-error
 #!/usr/bin/env python3
 """yt_audio_collector documentation build configuration file."""
 import os
@@ -5,12 +6,20 @@ import sys
 
 import sphinx_rtd_theme
 
-sys.path.insert(0, os.path.abspath("../"))
+sys.path.append("..")
 
 from yt_audio_collector import __version__  # noqa
 
 # -- General configuration ------------------------------------------------
-autodoc_mock_imports = ["librosa","numpy","youtube_transcript_api", "whisper","pytube","pydub","soundfile"]
+autodoc_mock_imports = [
+    "librosa",
+    "numpy",
+    "youtube_transcript_api",
+    "whisper",
+    "pytube",
+    "pydub",
+    "soundfile",
+]
 extensions = [
     "sphinx.ext.autodoc",
     "sphinx.ext.autosummary",
@@ -34,9 +43,9 @@ source_suffix = ".rst"
 master_doc = "index"
 
 # General information about the project.
-project = 'Youtube Audio Collector'
-copyright = '2023, Nagalakshmi'
-author = 'Nagalakshmi'
+project = "Youtube Audio Collector"
+copyright = "2023, Nagalakshmi"
+author = "Nagalakshmi"
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the
 # built documents.
@@ -122,7 +131,13 @@ latex_documents = [
 # One entry per manual page. List of tuples
 # (source start file, name, description, authors, manual section).
 man_pages = [
-    (master_doc, "yt_audio_collector", "yt_audio_collector Documentation", [author], 1,),
+    (
+        master_doc,
+        "yt_audio_collector",
+        "yt_audio_collector Documentation",
+        [author],
+        1,
+    ),
 ]
 
 # -- Options for Texinfo output -------------------------------------------
