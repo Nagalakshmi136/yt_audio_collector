@@ -1,29 +1,27 @@
+# pylint: disable=missing-module-docstring
 import json
-import os
 from pathlib import Path
 from typing import Any, Union
 
 
 def resolve_path(file_path: Union[str, Path]) -> Path:
-
     """
     Check if the given file path exists and return a Path object if it does.
-    
 
     Parameters:
-    ----------- 
+    -----------
     file_path: `Union[str, Path]`
         The path of the file to check.
-        
+
     Exceptions:
-    -----------           
-    FileNotFoundError:             
+    -----------
+    FileNotFoundError:
         If the file path does not exist.
 
     Return:
-    -------                 
-    Path         
-        The Path object of the file path.  
+    -------
+    Path
+        The Path object of the file path.
     """
     if isinstance(file_path, str):
         file_path = Path(file_path)
@@ -35,17 +33,17 @@ def resolve_path(file_path: Union[str, Path]) -> Path:
 def load_json(file_path: Union[str, Path]) -> Any:
     """
     Load data from a JSON file.
-    
+
 
     Parameters:
-    ----------- 
+    -----------
     file_path: `Union[str, Path]`
         The path of the JSON file.
-        
+
     Return:
-    -------                 
-    Any    
-        A dictionary with the data in the file.  
+    -------
+    Any
+        A dictionary with the data in the file.
     """
     file_path = resolve_path(file_path)
 
@@ -63,17 +61,16 @@ def create_dir(dir_path: Union[str, Path]) -> Path:
     Create a directory with the given path.
 
     Parameters:
-    ----------- 
+    -----------
     dir_path: `Union[str, Path]`
         The path of the directory to create.
 
     Return:
-    -------                 
-    Path         
-        The created directory path.  
+    -------
+    Path
+        The created directory path.
     """
     if isinstance(dir_path, str):
         dir_path = Path(dir_path)
     dir_path.mkdir(parents=True, exist_ok=True)
     return dir_path
-

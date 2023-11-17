@@ -4,15 +4,17 @@ import urllib.request
 from typing import List
 
 from youtube_transcript_api import YouTubeTranscriptApi
-from yt_audio_collector.system_1.valid_transcript import is_valid_hindi_transcript
+
 from yt_audio_collector.constants import BASE_PATH
+from yt_audio_collector.system_1.valid_transcript import is_valid_hindi_transcript
 from yt_audio_collector.system_1.video_to_audio import has_hindi_audio
 from yt_audio_collector.utils.file_utils import create_dir
 
-class FetchValidYouTubeData():
+
+class FetchValidYouTubeData:
     def __init__(self) -> None:
-        pass 
-    
+        pass
+
     def get_video_ids(self, query: str) -> List[str]:
         """
         Fetches all video ids corresponding to the given query from YouTube.
@@ -30,13 +32,13 @@ class FetchValidYouTubeData():
         # Replace underscores with plus signs to match YouTube's search query format
         query = query.replace("_", "+")
         total_video_ids = []
-        # While requesting the youtube server every time it gives slightly 
-        # different results for the same query, to capture the majority no.of 
+        # While requesting the youtube server every time it gives slightly
+        # different results for the same query, to capture the majority no.of
         # results request the server multiple times(say 5 here) and
-        # and store all the results. 
-        for i in range(5):        
+        # and store all the results.
+        for i in range(5):
             # Requests the youtube server using urllib library which gives html file
-            # with the following url where sp=EgQoATAB helps to filter the 
+            # with the following url where sp=EgQoATAB helps to filter the
             # results for the query with the features Subtitles/CC and Creative Commons
             html = urllib.request.urlopen(
                 f"https://www.youtube.com/results?search_query={query}&sp=EgQoATAB"
@@ -47,9 +49,6 @@ class FetchValidYouTubeData():
             total_video_ids.extend(video_ids)
         # Remove duplicates and return unique results(video ids).
         return list(set(total_video_ids))
-
-
-
 
     def get_valid_video_ids(self, query: str) -> List[str]:
         """
@@ -69,13 +68,13 @@ class FetchValidYouTubeData():
         """
         # To store files temporarily, here mainly for storing for audio files
         create_dir(BASE_PATH / "temp")
-        query = query.replace(' ','_')
+        query = query.replace(" ", "_")
         # Fetch all video ids for the given query
         video_ids = self.get_video_ids(query)
         transcript_results = {}
         for video in video_ids:
             try:
-                # Fetch the hindi transcript for the video id using youtube_transcript_api library 
+                # Fetch the hindi transcript for the video id using youtube_transcript_api library
                 transcript_list = YouTubeTranscriptApi.list_transcripts(video)
                 transcript = transcript_list.find_manually_created_transcript(
                     language_codes=["hi"]

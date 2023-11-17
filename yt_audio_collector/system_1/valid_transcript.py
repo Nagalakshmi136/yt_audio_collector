@@ -41,7 +41,7 @@ def is_valid_hindi_transcript(transcript: List[dict], video_id: str) -> bool:
         len_hindi_chars = len(hindi_chars)
         len_total_chars = len(transcript_text)
         subtitles_duration += transcript[i].get("duration")
-        # Calculate the ratio of Hindi characters to total characters 
+        # Calculate the ratio of Hindi characters to total characters
         # of transcript
         if hindi_to_total_text_ratio == 0:
             hindi_to_total_text_ratio = round(len_hindi_chars / len_total_chars, 4)
