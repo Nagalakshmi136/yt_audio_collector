@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>yt_audio_collector.system_1.video_to_audio &mdash; Youtube Audio Collector 0.1.0 documentation</title>
+      <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../../../_static/documentation_options.js?v=01f34227"></script>
+        <script src="../../../_static/doctools.js?v=888ff710"></script>
+        <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            Youtube Audio Collector
+          </a>
+              <div class="version">
+                0.1.0
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../install.html">Installation of yt_audio_collector:</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../Quickstart.html">Quickstart</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../modules.html">Youtube Audio Collector</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">Youtube Audio Collector</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">yt_audio_collector.system_1.video_to_audio</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for yt_audio_collector.system_1.video_to_audio</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">This module contains functions to convert YouTube videos to audio files, detect the language of the audio,</span>
+<span class="sd">store the audio files, and check if the audio is in Hindi language.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
+
+<span class="kn">import</span> <span class="nn">whisper</span>
+<span class="kn">from</span> <span class="nn">pytube</span> <span class="kn">import</span> <span class="n">YouTube</span>
+
+<span class="kn">from</span> <span class="nn">yt_audio_collector.constants</span> <span class="kn">import</span> <span class="n">BASE_PATH</span><span class="p">,</span> <span class="n">BASE_URL</span>
+
+
+<div class="viewcode-block" id="get_audio_language">
+<a class="viewcode-back" href="../../../yt_audio_collector.system_1.html#yt_audio_collector.system_1.video_to_audio.get_audio_language">[docs]</a>
+<span class="k">def</span> <span class="nf">get_audio_language</span><span class="p">(</span><span class="n">audio_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Detects the language of an audio using the whisper model.</span>
+
+<span class="sd">    Parameters:</span>
+<span class="sd">    -----------</span>
+<span class="sd">    audio_path: `str`</span>
+<span class="sd">        The path of the audio file.</span>
+
+<span class="sd">    Return:</span>
+<span class="sd">    -------</span>
+<span class="sd">    str</span>
+<span class="sd">        The language of the given audio.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">model</span> <span class="o">=</span> <span class="n">whisper</span><span class="o">.</span><span class="n">load_model</span><span class="p">(</span><span class="s2">&quot;base&quot;</span><span class="p">)</span>
+    <span class="c1"># load audio and pad/trim it to fit 30 seconds</span>
+    <span class="n">audio</span> <span class="o">=</span> <span class="n">whisper</span><span class="o">.</span><span class="n">load_audio</span><span class="p">(</span><span class="n">audio_path</span><span class="p">)</span>
+    <span class="n">audio</span> <span class="o">=</span> <span class="n">whisper</span><span class="o">.</span><span class="n">pad_or_trim</span><span class="p">(</span><span class="n">audio</span><span class="p">)</span>
+    <span class="c1"># make log-Mel spectrogram and move to the same device as the model</span>
+    <span class="n">mel</span> <span class="o">=</span> <span class="n">whisper</span><span class="o">.</span><span class="n">log_mel_spectrogram</span><span class="p">(</span><span class="n">audio</span><span class="p">)</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">device</span><span class="p">)</span>
+
+    <span class="c1"># detect the spoken language</span>
+    <span class="n">_</span><span class="p">,</span> <span class="n">probs</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">detect_language</span><span class="p">(</span><span class="n">mel</span><span class="p">)</span>
+    <span class="n">detected_language</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">probs</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="n">probs</span><span class="o">.</span><span class="n">get</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">detected_language</span></div>
+
+
+
+<div class="viewcode-block" id="duration_of_video">
+<a class="viewcode-back" href="../../../yt_audio_collector.system_1.html#yt_audio_collector.system_1.video_to_audio.duration_of_video">[docs]</a>
+<span class="k">def</span> <span class="nf">duration_of_video</span><span class="p">(</span><span class="n">video_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Gets the duration of the video in seconds using the pytube library.</span>
+
+<span class="sd">    Parameters:</span>
+<span class="sd">    -----------</span>
+<span class="sd">    video_id: `str`</span>
+<span class="sd">        The id of the video.</span>
+
+<span class="sd">    Return:</span>
+<span class="sd">    -------</span>
+<span class="sd">    int</span>
+<span class="sd">        The duration of the video in seconds.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">yt</span> <span class="o">=</span> <span class="n">YouTube</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">BASE_URL</span><span class="si">}{</span><span class="n">video_id</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">yt</span><span class="o">.</span><span class="n">length</span></div>
+
+
+
+<div class="viewcode-block" id="store_audio">
+<a class="viewcode-back" href="../../../yt_audio_collector.system_1.html#yt_audio_collector.system_1.video_to_audio.store_audio">[docs]</a>
+<span class="k">def</span> <span class="nf">store_audio</span><span class="p">(</span><span class="n">query</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">audio_path</span><span class="p">:</span> <span class="n">Path</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Stores the audio file in a separate audio folder.</span>
+
+<span class="sd">    Parameters:</span>
+<span class="sd">    -----------</span>
+<span class="sd">    query: `str`</span>
+<span class="sd">        Represents the data you need.</span>
+<span class="sd">    audio_path: `Path`</span>
+<span class="sd">        The path of the audio file.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">destination_path</span> <span class="o">=</span> <span class="n">BASE_PATH</span> <span class="o">/</span> <span class="s2">&quot;output&quot;</span> <span class="o">/</span> <span class="n">query</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot; &quot;</span><span class="p">,</span> <span class="s2">&quot;_&quot;</span><span class="p">)</span> <span class="o">/</span> <span class="n">audio_path</span><span class="o">.</span><span class="n">name</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">destination_path</span><span class="o">.</span><span class="n">parent</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
+        <span class="n">destination_path</span><span class="o">.</span><span class="n">parent</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">parents</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">os</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="n">audio_path</span><span class="p">,</span> <span class="n">destination_path</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="convert_video_to_audio">
+<a class="viewcode-back" href="../../../yt_audio_collector.system_1.html#yt_audio_collector.system_1.video_to_audio.convert_video_to_audio">[docs]</a>
+<span class="k">def</span> <span class="nf">convert_video_to_audio</span><span class="p">(</span><span class="n">video_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Path</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Converts a video to an audio file.</span>
+
+<span class="sd">    Parameters:</span>
+<span class="sd">    -----------</span>
+<span class="sd">    video_id: `str`</span>
+<span class="sd">        The id of the video.</span>
+
+<span class="sd">    Return:</span>
+<span class="sd">    -------</span>
+<span class="sd">    Path</span>
+<span class="sd">        The path of the converted audio file.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">url</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">BASE_URL</span><span class="si">}{</span><span class="n">video_id</span><span class="si">}</span><span class="s2">&quot;</span>
+    <span class="n">you_tube</span> <span class="o">=</span> <span class="n">YouTube</span><span class="p">(</span><span class="n">url</span><span class="p">)</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="c1"># Fetching the audio of the video with given id</span>
+        <span class="n">video</span> <span class="o">=</span> <span class="n">you_tube</span><span class="o">.</span><span class="n">streams</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">only_audio</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span><span class="o">.</span><span class="n">first</span><span class="p">()</span>
+    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">exception</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">exception</span><span class="p">)</span>
+    <span class="n">destination</span> <span class="o">=</span> <span class="n">BASE_PATH</span> <span class="o">/</span> <span class="s2">&quot;temp&quot;</span>
+    <span class="c1"># Downloading the audio in temporary file and it gives audio file</span>
+    <span class="c1"># but with mp4(video supported format) extension which we need to</span>
+    <span class="c1"># convert to mp3(audio supported format)</span>
+    <span class="n">output_file</span> <span class="o">=</span> <span class="n">video</span><span class="o">.</span><span class="n">download</span><span class="p">(</span><span class="n">output_path</span><span class="o">=</span><span class="n">destination</span><span class="p">)</span>
+    <span class="c1"># Renaming the downloaded file with mp3</span>
+    <span class="n">new_file</span> <span class="o">=</span> <span class="n">destination</span> <span class="o">/</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">video_id</span><span class="si">}</span><span class="s2">.mp3&quot;</span>
+    <span class="n">os</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">output_file</span><span class="p">,</span> <span class="n">new_file</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">new_file</span></div>
+
+
+
+<div class="viewcode-block" id="has_hindi_audio">
+<a class="viewcode-back" href="../../../yt_audio_collector.system_1.html#yt_audio_collector.system_1.video_to_audio.has_hindi_audio">[docs]</a>
+<span class="k">def</span> <span class="nf">has_hindi_audio</span><span class="p">(</span><span class="n">video_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">query</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Converts the video to an audio file, determines its audio language,</span>
+<span class="sd">    stores the audio file if it&#39;s in Hindi language, and returns True.</span>
+<span class="sd">    Otherwise, removes the audio file and returns False.</span>
+
+<span class="sd">    Parameters:</span>
+<span class="sd">    -----------</span>
+<span class="sd">    video_id: `str`</span>
+<span class="sd">        The id of the video.</span>
+<span class="sd">    query: `str`</span>
+<span class="sd">        Represents the data you need.</span>
+
+<span class="sd">    Return:</span>
+<span class="sd">    -------</span>
+<span class="sd">    bool</span>
+<span class="sd">        True if the audio language is Hindi, and False otherwise.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">audio_file</span> <span class="o">=</span> <span class="n">convert_video_to_audio</span><span class="p">(</span><span class="n">video_id</span><span class="p">)</span>
+    <span class="n">audio_language</span> <span class="o">=</span> <span class="n">get_audio_language</span><span class="p">(</span><span class="n">audio_file</span><span class="p">)</span>
+    <span class="c1"># print(audio_language)</span>
+
+    <span class="k">if</span> <span class="n">audio_language</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;hi&quot;</span><span class="p">]:</span>
+        <span class="n">store_audio</span><span class="p">(</span><span class="n">query</span><span class="p">,</span> <span class="n">audio_file</span><span class="p">)</span>
+        <span class="k">return</span> <span class="kc">True</span>
+    <span class="c1"># Removing the audio file which is not Hindi from temporary storage</span>
+    <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">audio_file</span><span class="p">):</span>
+        <span class="n">os</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">audio_file</span><span class="p">)</span>
+    <span class="k">return</span> <span class="kc">False</span></div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, Nagalakshmi.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

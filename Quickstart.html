@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Quickstart &mdash; Youtube Audio Collector 0.1.0 documentation</title>
+      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="_static/documentation_options.js?v=01f34227"></script>
+        <script src="_static/doctools.js?v=888ff710"></script>
+        <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Youtube Audio Collector" href="modules.html" />
+    <link rel="prev" title="Installation of yt_audio_collector:" href="install.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            Youtube Audio Collector
+          </a>
+              <div class="version">
+                0.1.0
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="install.html">Installation of yt_audio_collector:</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Quickstart</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#preparing-the-hindi-transcript-and-audio-from-youtube">Preparing the Hindi transcript and audio from youtube</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#preprocessing-hindi-audio">Preprocessing Hindi audio</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="modules.html">Youtube Audio Collector</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Youtube Audio Collector</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Quickstart</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/Quickstart.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="quickstart">
+<span id="id1"></span><h1>Quickstart<a class="headerlink" href="#quickstart" title="Link to this heading">¶</a></h1>
+<p>This guide will walk you through the basic usage of yt_audio_collector.</p>
+<p>Let’s get started with some examples.</p>
+<p>yt_audio_collector contains 2 systems.</p>
+<p>The system-1 is used for:</p>
+<section id="preparing-the-hindi-transcript-and-audio-from-youtube">
+<h2>Preparing the Hindi transcript and audio from youtube<a class="headerlink" href="#preparing-the-hindi-transcript-and-audio-from-youtube" title="Link to this heading">¶</a></h2>
+<p>Begin with importing the FetchValidYouTubeData class from the
+yt_audio_collector/system_1/fetch_youtube_data module:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">yt_audio_collector.system_1.fetch_youtube_data</span> <span class="kn">import</span> <span class="n">FetchValidYouTubeData</span>
+</pre></div>
+</div>
+<p>FetchValidYouTubeData class contains a method get_valid_video_ids
+helps to get the video IDs that have Hindi audio and Hindi transcript of the
+relevant videos for the given query and store the Hindi transcript and Hindi audio
+with the video id as name of the audio file inside the query as folder name in the output folder of the current project:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">yt_data</span> <span class="o">=</span> <span class="n">FetchValidYouTubeData</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">video_ids</span> <span class="o">=</span> <span class="n">yt_data</span><span class="o">.</span><span class="n">get_valid_video_ids</span><span class="p">(</span><span class="s1">&#39;cricket news in hindi&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>The system 2 is used for:</p>
+</section>
+<section id="preprocessing-hindi-audio">
+<h2>Preprocessing Hindi audio<a class="headerlink" href="#preprocessing-hindi-audio" title="Link to this heading">¶</a></h2>
+<p>Begin with importing PreProcessAudio class from yt_audio_collector/system_2/preprocess_audio:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">yt_audio_collector.system_2.preprocess_audio</span> <span class="kn">import</span> <span class="n">PreProcessAudio</span>
+</pre></div>
+</div>
+<p>To preprocessing the Hindi audio stored in audio folder, Use the preprocess_audio method of PreProcessAudio class
+which take 3 arguments:</p>
+<ol class="arabic">
+<li><p>Source location of the audio files which need to be process(default value is the path to the output folder which is the result of system-1 module).</p></li>
+<li><p>Destination location of the audio files after preprocessing(default value is the path to the result as shown in processed_output in current working project).</p></li>
+<li><p>Enable or Disable the background sound(default value is False(Enable)).</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">PreProcessAudio</span><span class="p">(</span><span class="n">source_path</span><span class="p">,</span> <span class="n">destination_path</span><span class="p">,</span> <span class="n">background_sound</span><span class="p">)</span><span class="o">.</span><span class="n">preprocess_audio</span><span class="p">()</span>
+</pre></div>
+</div>
+</li>
+</ol>
+<p>Now the preprocessed audio stored in destination_path or processed_output folder in current
+working project as default.</p>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="install.html" class="btn btn-neutral float-left" title="Installation of yt_audio_collector:" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="modules.html" class="btn btn-neutral float-right" title="Youtube Audio Collector" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, Nagalakshmi.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

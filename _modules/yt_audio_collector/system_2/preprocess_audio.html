@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>yt_audio_collector.system_2.preprocess_audio &mdash; Youtube Audio Collector 0.1.0 documentation</title>
+      <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../../../_static/documentation_options.js?v=01f34227"></script>
+        <script src="../../../_static/doctools.js?v=888ff710"></script>
+        <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            Youtube Audio Collector
+          </a>
+              <div class="version">
+                0.1.0
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../install.html">Installation of yt_audio_collector:</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../Quickstart.html">Quickstart</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../modules.html">Youtube Audio Collector</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">Youtube Audio Collector</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">yt_audio_collector.system_2.preprocess_audio</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for yt_audio_collector.system_2.preprocess_audio</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Splitting audio based on transcript</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">print_function</span>
+
+<span class="kn">import</span> <span class="nn">csv</span>
+<span class="kn">import</span> <span class="nn">json</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+<span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
+
+<span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;..&quot;</span><span class="p">)</span>
+<span class="kn">import</span> <span class="nn">librosa</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">soundfile</span> <span class="k">as</span> <span class="nn">sf</span>
+<span class="kn">from</span> <span class="nn">pydub</span> <span class="kn">import</span> <span class="n">AudioSegment</span>
+
+<span class="kn">from</span> <span class="nn">yt_audio_collector.constants</span> <span class="kn">import</span> <span class="n">BASE_PATH</span>
+<span class="kn">from</span> <span class="nn">yt_audio_collector.utils.file_utils</span> <span class="kn">import</span> <span class="n">create_dir</span><span class="p">,</span> <span class="n">load_json</span><span class="p">,</span> <span class="n">resolve_path</span>
+
+
+<div class="viewcode-block" id="PreProcessAudio">
+<a class="viewcode-back" href="../../../yt_audio_collector.system_2.html#yt_audio_collector.system_2.preprocess_audio.PreProcessAudio">[docs]</a>
+<span class="k">class</span> <span class="nc">PreProcessAudio</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    This class is responsible for preprocessing the audio for speech recognition model.</span>
+<span class="sd">    It extracts vocals from audio files,</span>
+<span class="sd">    resamples the audio, and divides the audio into chunks based on transcriptions.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">source_path</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">BASE_PATH</span><span class="si">}</span><span class="s2">/output&quot;</span><span class="p">,</span>
+        <span class="n">destination_path</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">BASE_PATH</span><span class="si">}</span><span class="s2">/processed_output&quot;</span><span class="p">,</span>
+        <span class="n">background_sound</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Initializes the PreProcessAudio class.</span>
+
+<span class="sd">        Attributes:</span>
+<span class="sd">        -----------</span>
+<span class="sd">        source_path: `Path`</span>
+<span class="sd">            The path of the source audio files.</span>
+<span class="sd">        destination_path: `Path`</span>
+<span class="sd">            The path where the processed audio files will be stored.</span>
+<span class="sd">        background_sound: `bool`</span>
+<span class="sd">            A boolean value indicating whether to extract vocals from the audio files or not.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">sample_rate</span> <span class="o">=</span> <span class="mi">16000</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">width_rate</span> <span class="o">=</span> <span class="mi">2</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">channels</span> <span class="o">=</span> <span class="mi">1</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">background_sound</span> <span class="o">=</span> <span class="n">background_sound</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">destination_path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">destination_path</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">temp</span> <span class="o">=</span> <span class="n">create_dir</span><span class="p">(</span><span class="n">BASE_PATH</span> <span class="o">/</span> <span class="s2">&quot;temp&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">source_path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">source_path</span><span class="p">)</span>
+
+<div class="viewcode-block" id="PreProcessAudio.get_file_name">
+<a class="viewcode-back" href="../../../yt_audio_collector.system_2.html#yt_audio_collector.system_2.preprocess_audio.PreProcessAudio.get_file_name">[docs]</a>
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">get_file_name</span><span class="p">(</span><span class="n">total_file_path</span><span class="p">:</span> <span class="n">Path</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Finds the file name without extension from absolute file path</span>
+
+<span class="sd">        Parameters:</span>
+<span class="sd">        -----------</span>
+<span class="sd">        total_file_path: `Path`</span>
+<span class="sd">            The absolute path of the file</span>
+
+<span class="sd">        Return:</span>
+<span class="sd">        -------</span>
+<span class="sd">        str</span>
+<span class="sd">            File name without extension</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">base_name</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">total_file_path</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">splitext</span><span class="p">(</span><span class="n">base_name</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span></div>
+
+
+<div class="viewcode-block" id="PreProcessAudio.extract_vocals">
+<a class="viewcode-back" href="../../../yt_audio_collector.system_2.html#yt_audio_collector.system_2.preprocess_audio.PreProcessAudio.extract_vocals">[docs]</a>
+    <span class="k">def</span> <span class="nf">extract_vocals</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">chunk_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Extracts vocals from audio file using spleeter library and store it in the temporary file(temp).</span>
+
+<span class="sd">        Parameters:</span>
+<span class="sd">        -----------</span>
+<span class="sd">        chunk_path: `str`</span>
+<span class="sd">            The path of the audio file.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Load an example with vocals.</span>
+        <span class="n">audio_signal</span><span class="p">,</span> <span class="n">sample_rate</span> <span class="o">=</span> <span class="n">librosa</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">chunk_path</span><span class="si">}</span><span class="s2">.wav&quot;</span><span class="p">)</span>
+
+        <span class="c1"># And compute the spectrogram magnitude and phase</span>
+        <span class="n">s_full</span><span class="p">,</span> <span class="n">phase</span> <span class="o">=</span> <span class="n">librosa</span><span class="o">.</span><span class="n">magphase</span><span class="p">(</span><span class="n">librosa</span><span class="o">.</span><span class="n">stft</span><span class="p">(</span><span class="n">audio_signal</span><span class="p">))</span>
+        <span class="c1"># The wiggly lines above are due to the vocal component.</span>
+        <span class="c1"># Our goal is to separate them from the accompanying</span>
+        <span class="c1"># instrumentation.</span>
+        <span class="c1">#</span>
+
+        <span class="c1"># We&#39;ll compare frames using cosine similarity, and aggregate similar frames</span>
+        <span class="c1"># by taking their (per-frequency) median value.</span>
+        <span class="c1">#</span>
+        <span class="c1"># To avoid being biased by local continuity, we constrain similar frames to be</span>
+        <span class="c1"># separated by at least 2 seconds.</span>
+        <span class="c1">#</span>
+        <span class="c1"># This suppresses sparse/non-repetetitive deviations from the average spectrum,</span>
+        <span class="c1"># and works well to discard vocal elements.</span>
+
+        <span class="n">s_filter</span> <span class="o">=</span> <span class="n">librosa</span><span class="o">.</span><span class="n">decompose</span><span class="o">.</span><span class="n">nn_filter</span><span class="p">(</span>
+            <span class="n">s_full</span><span class="p">,</span>
+            <span class="n">aggregate</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">median</span><span class="p">,</span>
+            <span class="n">metric</span><span class="o">=</span><span class="s2">&quot;cosine&quot;</span><span class="p">,</span>
+            <span class="n">width</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="n">librosa</span><span class="o">.</span><span class="n">time_to_frames</span><span class="p">(</span><span class="mf">0.1</span><span class="p">,</span> <span class="n">sr</span><span class="o">=</span><span class="n">sample_rate</span><span class="p">)),</span>
+        <span class="p">)</span>
+
+        <span class="c1"># The output of the filter shouldn&#39;t be greater than the input</span>
+        <span class="c1"># if we assume signals are additive.  Taking the pointwise minimium</span>
+        <span class="c1"># with the input spectrum forces this.</span>
+        <span class="n">s_filter</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">minimum</span><span class="p">(</span><span class="n">s_full</span><span class="p">,</span> <span class="n">s_filter</span><span class="p">)</span>
+        <span class="c1"># The raw filter output can be used as a mask,</span>
+        <span class="c1"># but it sounds better if we use soft-masking.</span>
+
+        <span class="c1"># We can also use a margin to reduce bleed between the vocals and instrumentation masks.</span>
+        <span class="c1"># Note: the margins need not be equal for foreground and background separation</span>
+        <span class="n">margin_v</span> <span class="o">=</span> <span class="mi">10</span>
+        <span class="n">power</span> <span class="o">=</span> <span class="mi">2</span>
+
+        <span class="n">mask_v</span> <span class="o">=</span> <span class="n">librosa</span><span class="o">.</span><span class="n">util</span><span class="o">.</span><span class="n">softmask</span><span class="p">(</span>
+            <span class="n">s_full</span> <span class="o">-</span> <span class="n">s_filter</span><span class="p">,</span> <span class="n">margin_v</span> <span class="o">*</span> <span class="n">s_filter</span><span class="p">,</span> <span class="n">power</span><span class="o">=</span><span class="n">power</span>
+        <span class="p">)</span>
+
+        <span class="c1"># Once we have the masks, simply multiply them with the input spectrum</span>
+        <span class="c1"># to separate the components</span>
+
+        <span class="n">s_foreground</span> <span class="o">=</span> <span class="n">mask_v</span> <span class="o">*</span> <span class="n">s_full</span>
+        <span class="n">new_y</span> <span class="o">=</span> <span class="n">librosa</span><span class="o">.</span><span class="n">istft</span><span class="p">(</span><span class="n">s_foreground</span> <span class="o">*</span> <span class="n">phase</span><span class="p">)</span>
+        <span class="n">sf</span><span class="o">.</span><span class="n">write</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">temp</span><span class="si">}</span><span class="s2">/vocals.wav&quot;</span><span class="p">,</span> <span class="n">new_y</span><span class="p">,</span> <span class="n">samplerate</span><span class="o">=</span><span class="n">sample_rate</span><span class="p">,</span> <span class="n">subtype</span><span class="o">=</span><span class="s2">&quot;PCM_16&quot;</span>
+        <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="PreProcessAudio.resample">
+<a class="viewcode-back" href="../../../yt_audio_collector.system_2.html#yt_audio_collector.system_2.preprocess_audio.PreProcessAudio.resample">[docs]</a>
+    <span class="k">def</span> <span class="nf">resample</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">chunk_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">destination_chunk_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Changes the sample rate, sample width, channels of the the given audio file .</span>
+
+<span class="sd">        Parameters:</span>
+<span class="sd">        -----------</span>
+<span class="sd">        chunk_path: `str`</span>
+<span class="sd">            The audio file path before resampling.</span>
+<span class="sd">        destination_chunk_path: `str`</span>
+<span class="sd">            The audio fille path after resampling.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">vocals_audio</span> <span class="o">=</span> <span class="n">AudioSegment</span><span class="o">.</span><span class="n">from_file</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">chunk_path</span><span class="si">}</span><span class="s2">.wav&quot;</span><span class="p">)</span>
+        <span class="c1"># set sample frame rate</span>
+        <span class="n">vocals_audio</span> <span class="o">=</span> <span class="n">vocals_audio</span><span class="o">.</span><span class="n">set_frame_rate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">sample_rate</span><span class="p">)</span>
+        <span class="c1"># set sample width</span>
+        <span class="n">vocals_audio</span> <span class="o">=</span> <span class="n">vocals_audio</span><span class="o">.</span><span class="n">set_sample_width</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">width_rate</span><span class="p">)</span>
+        <span class="c1"># set channels</span>
+        <span class="n">vocals_audio</span> <span class="o">=</span> <span class="n">vocals_audio</span><span class="o">.</span><span class="n">set_channels</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">channels</span><span class="p">)</span>
+        <span class="n">vocals_audio</span><span class="o">.</span><span class="n">export</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">destination_chunk_path</span><span class="si">}</span><span class="s2">.wav&quot;</span><span class="p">,</span> <span class="nb">format</span><span class="o">=</span><span class="s2">&quot;wav&quot;</span><span class="p">)</span></div>
+
+
+    <span class="c1"># pylint: disable=too-many-locals</span>
+<div class="viewcode-block" id="PreProcessAudio.preprocess_audio_chunks">
+<a class="viewcode-back" href="../../../yt_audio_collector.system_2.html#yt_audio_collector.system_2.preprocess_audio.PreProcessAudio.preprocess_audio_chunks">[docs]</a>
+    <span class="k">def</span> <span class="nf">preprocess_audio_chunks</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">category_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Divides the audio into chunks based on the transcriptions and preprocess the audio chunks.</span>
+
+<span class="sd">        Parameters:</span>
+<span class="sd">        -----------</span>
+<span class="sd">        category_path: `str`</span>
+<span class="sd">            The category name in the audio folder.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Make a JSON file which contains all the processed audio ids</span>
+        <span class="c1"># which helps to track the processed audio files in one place and</span>
+        <span class="c1"># avoid processing of the same audio repeatedly.</span>
+        <span class="n">processed_audio_file_path</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">destination_path</span> <span class="o">/</span> <span class="s2">&quot;processed_audios.json&quot;</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">processed_audio_file_path</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
+            <span class="n">processed_audio_file_path</span><span class="o">.</span><span class="n">touch</span><span class="p">()</span>
+
+        <span class="n">processed_audios</span> <span class="o">=</span> <span class="n">load_json</span><span class="p">(</span><span class="n">processed_audio_file_path</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">processed_audios</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">category_path</span><span class="p">):</span>
+            <span class="n">processed_audios</span><span class="p">[</span><span class="n">category_path</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="n">audio_files_path</span> <span class="o">=</span> <span class="n">resolve_path</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">source_path</span> <span class="o">/</span> <span class="n">category_path</span><span class="p">)</span>
+        <span class="n">subtitles_data</span> <span class="o">=</span> <span class="n">load_json</span><span class="p">(</span><span class="n">audio_files_path</span> <span class="o">/</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">category_path</span><span class="si">}</span><span class="s2">.json&quot;</span><span class="p">)</span>
+        <span class="n">destination_category_path</span> <span class="o">=</span> <span class="n">create_dir</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">destination_path</span> <span class="o">/</span> <span class="n">category_path</span><span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">audio_file_path</span> <span class="ow">in</span> <span class="n">audio_files_path</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="s2">&quot;*.mp3&quot;</span><span class="p">):</span>
+            <span class="n">audio_id</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_file_name</span><span class="p">(</span><span class="n">audio_file_path</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="n">audio_id</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">processed_audios</span><span class="p">[</span><span class="n">category_path</span><span class="p">]:</span>
+                <span class="n">audio</span> <span class="o">=</span> <span class="n">AudioSegment</span><span class="o">.</span><span class="n">from_file_using_temporary_files</span><span class="p">(</span><span class="n">audio_file_path</span><span class="p">)</span>
+                <span class="n">destination_audio_path</span> <span class="o">=</span> <span class="n">create_dir</span><span class="p">(</span>
+                    <span class="n">destination_category_path</span> <span class="o">/</span> <span class="n">audio_id</span>
+                <span class="p">)</span>
+                <span class="n">subtitles</span> <span class="o">=</span> <span class="n">subtitles_data</span><span class="p">[</span><span class="n">audio_id</span><span class="p">]</span>
+
+                <span class="k">with</span> <span class="nb">open</span><span class="p">(</span>
+                    <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">destination_audio_path</span><span class="si">}</span><span class="s2">/subtitles.txt&quot;</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s2">&quot;utf-8&quot;</span>
+                <span class="p">)</span> <span class="k">as</span> <span class="n">file_writer</span><span class="p">:</span>
+                    <span class="n">csv_writer</span> <span class="o">=</span> <span class="n">csv</span><span class="o">.</span><span class="n">writer</span><span class="p">(</span><span class="n">file_writer</span><span class="p">)</span>
+
+                    <span class="k">for</span> <span class="n">subtitle</span> <span class="ow">in</span> <span class="n">subtitles</span><span class="p">:</span>
+                        <span class="n">start_time</span> <span class="o">=</span> <span class="n">subtitle</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;start&quot;</span><span class="p">)</span> <span class="o">*</span> <span class="mi">1000</span>
+                        <span class="n">end_time</span> <span class="o">=</span> <span class="n">start_time</span> <span class="o">+</span> <span class="n">subtitle</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;duration&quot;</span><span class="p">)</span> <span class="o">*</span> <span class="mi">1000</span>
+                        <span class="c1"># print(start_time,end_time,subtitle.get(&#39;duration&#39;)*1000)</span>
+                        <span class="n">chunk</span> <span class="o">=</span> <span class="n">audio</span><span class="p">[</span><span class="n">start_time</span><span class="p">:</span><span class="n">end_time</span><span class="p">]</span>
+                        <span class="n">chunk_name</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">audio_id</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="n">start_time</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="n">end_time</span><span class="si">}</span><span class="s2">&quot;</span>
+                        <span class="n">chunk_path</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">temp</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="n">chunk_name</span><span class="si">}</span><span class="s2">&quot;</span>
+                        <span class="n">chunk</span><span class="o">.</span><span class="n">export</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">chunk_path</span><span class="si">}</span><span class="s2">.wav&quot;</span><span class="p">,</span> <span class="nb">format</span><span class="o">=</span><span class="s2">&quot;wav&quot;</span><span class="p">)</span>
+
+                        <span class="c1"># extract vocals from the chunk of audio file</span>
+                        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">background_sound</span><span class="p">:</span>
+                            <span class="bp">self</span><span class="o">.</span><span class="n">extract_vocals</span><span class="p">(</span><span class="n">chunk_path</span><span class="p">)</span>
+                            <span class="n">chunk_path</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">temp</span><span class="si">}</span><span class="s2">/vocals&quot;</span>
+
+                        <span class="c1"># resampling the extracted audio chunk</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">resample</span><span class="p">(</span>
+                            <span class="n">chunk_path</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">destination_audio_path</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="n">chunk_name</span><span class="si">}</span><span class="s2">&quot;</span>
+                        <span class="p">)</span>
+
+                        <span class="c1"># remove temporarily stored data</span>
+                        <span class="n">os</span><span class="o">.</span><span class="n">system</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;rm -rf </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">temp</span><span class="si">}</span><span class="s2">/*&quot;</span><span class="p">)</span>
+
+                        <span class="c1"># write into the csv transcription file</span>
+                        <span class="n">csv_writer</span><span class="o">.</span><span class="n">writerow</span><span class="p">([</span><span class="n">chunk_name</span><span class="p">,</span> <span class="n">subtitle</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;text&quot;</span><span class="p">)])</span>
+
+                <span class="n">processed_audios</span><span class="p">[</span><span class="n">category_path</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">audio_id</span><span class="p">)</span>
+        <span class="c1"># update the processed_audios.json file</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">processed_audio_file_path</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s2">&quot;utf-8&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">file_writer</span><span class="p">:</span>
+            <span class="n">json</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">processed_audios</span><span class="p">,</span> <span class="n">file_writer</span><span class="p">,</span> <span class="n">indent</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="PreProcessAudio.preprocess_audio">
+<a class="viewcode-back" href="../../../yt_audio_collector.system_2.html#yt_audio_collector.system_2.preprocess_audio.PreProcessAudio.preprocess_audio">[docs]</a>
+    <span class="k">def</span> <span class="nf">preprocess_audio</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Traverses through all categories of audio and preprocess the audio.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">create_dir</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">destination_path</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">category_path</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">source_path</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="s2">&quot;*&quot;</span><span class="p">):</span>
+            <span class="n">category_name</span> <span class="o">=</span> <span class="n">category_path</span><span class="o">.</span><span class="n">name</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">preprocess_audio_chunks</span><span class="p">(</span><span class="n">category_name</span><span class="p">)</span></div>
+</div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, Nagalakshmi.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

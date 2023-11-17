@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Welcome to Youtube Audio Collector’s documentation! &mdash; Youtube Audio Collector 0.1.0 documentation</title>
+      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="_static/documentation_options.js?v=01f34227"></script>
+        <script src="_static/doctools.js?v=888ff710"></script>
+        <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Installation of yt_audio_collector:" href="install.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="#" class="icon icon-home">
+            Youtube Audio Collector
+          </a>
+              <div class="version">
+                0.1.0
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="install.html">Installation of yt_audio_collector:</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Quickstart.html">Quickstart</a></li>
+<li class="toctree-l1"><a class="reference internal" href="modules.html">Youtube Audio Collector</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="#">Youtube Audio Collector</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="#" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Welcome to Youtube Audio Collector’s documentation!</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/index.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="welcome-to-youtube-audio-collector-s-documentation">
+<h1>Welcome to Youtube Audio Collector’s documentation!<a class="headerlink" href="#welcome-to-youtube-audio-collector-s-documentation" title="Link to this heading">¶</a></h1>
+<section id="overview">
+<h2>Overview:<a class="headerlink" href="#overview" title="Link to this heading">¶</a></h2>
+<blockquote>
+<div><p>This project aims to create a system that can retrieve YouTube videos based on a user query and convert them into audio files that are suitable for speech recognition. The system consists of the following steps:</p>
+<ul class="simple">
+<li><p>The system takes a user query as input and uses the request module in urllib library to get the video IDs of the relevant videos for the query.</p></li>
+<li><p>The system downloads the videos with Hindi audio and Hindi transcript and converts them into audio files using pytube library.</p></li>
+<li><p>The system filters out the video IDs that do not have Hindi audio and Hindi transcript by using the YouTube Transcript API and a language detection model(whisper).</p></li>
+<li><p>The system preprocesses the audio files for speech recognition by applying segmentation based on transcript and resampling(set frame rate, sample width, number of channels) using pydub library, vocals extraction using librosa library.</p></li>
+</ul>
+<p>The output of the system is a set of preprocessed audio files that can be used as input for a speech recognition model. The system can be useful for applications such as speech-to-text transcription, voice search, voice assistant, and voice analysis.</p>
+</div></blockquote>
+<div class="toctree-wrapper compound">
+<p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="install.html">Installation of yt_audio_collector:</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="install.html#get-the-source-code">Get the Source Code</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="Quickstart.html">Quickstart</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="Quickstart.html#preparing-the-hindi-transcript-and-audio-from-youtube">Preparing the Hindi transcript and audio from youtube</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Quickstart.html#preprocessing-hindi-audio">Preprocessing Hindi audio</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="modules.html">Youtube Audio Collector</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="yt_audio_collector.html">Youtube Audio Collector package</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</section>
+</section>
+<section id="indices-and-tables">
+<h1>Indices and tables<a class="headerlink" href="#indices-and-tables" title="Link to this heading">¶</a></h1>
+<ul class="simple">
+<li><p><a class="reference internal" href="genindex.html"><span class="std std-ref">Index</span></a></p></li>
+<li><p><a class="reference internal" href="py-modindex.html"><span class="std std-ref">Module Index</span></a></p></li>
+<li><p><a class="reference internal" href="search.html"><span class="std std-ref">Search Page</span></a></p></li>
+</ul>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="install.html" class="btn btn-neutral float-right" title="Installation of yt_audio_collector:" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, Nagalakshmi.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
