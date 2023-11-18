@@ -1,12 +1,22 @@
+#pylint: disable=singleton-comparison
 import pytest
-from unittest.mock import patch
 
 from yt_audio_collector.system_1.valid_transcript import is_valid_hindi_transcript
 
 
 @pytest.fixture
 def transcript():
-    # Sample transcript for testing
+    """
+    Sample transcript for testing
+
+    Parameters:
+    ----------- 
+
+    Return:
+    -------                 
+    `List[dict]`         
+        Sample transcript for testing 
+    """
     return [
         {
             "text": "के बैकग्राउंड में बज रहे म्यूजिक को\nज्यादा तो फैक्ट्री यूट्यूब चैनल्स",
@@ -53,31 +63,76 @@ def transcript():
 
 @pytest.fixture
 def video_id():
-    # Sample video ID for testing
+    """
+    Sample video ID for testing.
+    
+    Return:
+    -------                 
+    `str`
+        Sample video ID for testing           
+    """
     return "x0YnzXlwQSY"
 
 
 def test_valid_hindi_transcript(transcript, video_id):
+    """
+    Test a valid Hindi transcript.
+
+    Parameters:
+    ----------- 
+    transcript: `List[dict]`
+        sample transcript for the audio file.
+    video_id: `str`
+        sample audio file.
+    """
     # Test a valid Hindi transcript
     assert is_valid_hindi_transcript(transcript, video_id) == True
 
 
 def test_invalid_hindi_transcript_empty_text(transcript, video_id):
-    # Test an invalid Hindi transcript with too many empty texts
+    """
+    Test an invalid Hindi transcript with too many empty texts.
+    
+    Parameters:
+    ----------- 
+    transcript: `List[dict]`
+        sample transcript for the audio file.
+    video_id: `str`
+        sample audio file.
+    """
     for i in range(5):
         transcript[i]['text'] = ""
     assert is_valid_hindi_transcript(transcript, video_id) == False
 
 
 def test_invalid_hindi_transcript_no_hindi(transcript, video_id):
-    # Test an invalid Hindi transcript with no Hindi text
-    for i in range(len(transcript)):
+    """
+    Test an invalid Hindi transcript with no Hindi text
+
+    Parameters:
+    ----------- 
+    transcript: `List[dict]`
+        sample transcript for the audio file.
+    video_id: `str`
+        sample audio file.
+    """
+    for i in enumerate(transcript):
         transcript[i]["text"] = "This is a English text"
     assert is_valid_hindi_transcript(transcript, video_id) == False
 
 
 def test_invalid_hindi_transcript_no_duration(transcript, video_id):
-    # Test an invalid Hindi transcript with missing duration
+    """
+    Test an invalid Hindi transcript with missing duration
+    
+    Parameters:
+    ----------- 
+    transcript: `List[dict]`
+        sample transcript for the audio file.
+    video_id: `str`
+        sample audio file.
+    """
     transcript[0].pop("duration")
     with pytest.raises(TypeError):
         is_valid_hindi_transcript(transcript, video_id)
+        

@@ -1,6 +1,6 @@
 [MASTER]
-disable=  C0114, E0401, C0303
-         # missing-module-docstring,import error, trailing-whitespace
+disable=  C0114, E0401, C0303, W0621
+         # missing-module-docstring,import error, trailing-whitespace, redefined-outer-name
 
 
 [FORMAT]
