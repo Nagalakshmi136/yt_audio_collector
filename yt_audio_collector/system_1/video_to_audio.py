@@ -1,6 +1,7 @@
+# pylint: disable=import-error,broad-except
 """
-This module contains functions to convert YouTube videos to audio files, detect the language of the audio,
-store the audio files, and check if the audio is in Hindi language.
+This module contains functions to convert YouTube videos to audio files, detect the language
+of the audio, store the audio files, and check if the audio is in Hindi language.
 """
 
 import os
@@ -54,8 +55,8 @@ def duration_of_video(video_id: str) -> int:
     int
         The duration of the video in seconds.
     """
-    yt = YouTube(f"{BASE_URL}{video_id}")
-    return yt.length
+    you_tube = YouTube(f"{BASE_URL}{video_id}")
+    return you_tube.length
 
 
 def store_audio(query: str, audio_path: Path) -> None:

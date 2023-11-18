@@ -1,3 +1,6 @@
+"""
+    Methods to validate transcription
+"""
 import re
 from typing import List
 
@@ -30,7 +33,7 @@ def is_valid_hindi_transcript(transcript: List[dict], video_id: str) -> bool:
     for i in range(transcript_length):
         transcript_text = transcript[i].get("text")
         # Check for empty transcript text
-        if re.sub("[\s+]", "", transcript_text) == "":
+        if re.sub(r"[\s]+", "", transcript_text) == "":
             empty_text_count += 1
             # If there are more than 10 empty texts, the transcript is invalid
             if empty_text_count > 10:

@@ -1,3 +1,7 @@
+# pylint: disable=import-error, bare-except, consider-using-with
+"""
+    Collect the youtube data
+"""
 import json
 import re
 import urllib.request
@@ -12,10 +16,15 @@ from yt_audio_collector.utils.file_utils import create_dir
 
 
 class FetchValidYouTubeData:
+    """
+    class to fetch youtube data
+    """
+
     def __init__(self) -> None:
         pass
 
-    def get_video_ids(self, query: str) -> List[str]:
+    @staticmethod
+    def get_video_ids(query: str) -> List[str]:
         """
         Fetches all video ids corresponding to the given query from YouTube.
 
@@ -36,7 +45,7 @@ class FetchValidYouTubeData:
         # different results for the same query, to capture the majority no.of
         # results request the server multiple times(say 5 here) and
         # and store all the results.
-        for i in range(5):
+        for _ in range(5):
             # Requests the youtube server using urllib library which gives html file
             # with the following url where sp=EgQoATAB helps to filter the
             # results for the query with the features Subtitles/CC and Creative Commons
@@ -81,7 +90,7 @@ class FetchValidYouTubeData:
                 )
                 video_transcript = transcript.fetch()
                 # Check if the transcript is valid
-                if is_valid_hindi_transcript(video_transcript, video) == True:
+                if is_valid_hindi_transcript(video_transcript, video) is True:
                     # Check if the video has Hindi audio
                     if has_hindi_audio(video, query):
                         transcript_results[video] = video_transcript

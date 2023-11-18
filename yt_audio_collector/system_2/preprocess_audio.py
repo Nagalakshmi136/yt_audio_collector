@@ -1,3 +1,4 @@
+# pylint: disable= wrong-import-position, import-error
 """
 Splitting audio based on transcript
 """
@@ -72,7 +73,7 @@ class PreProcessAudio:
 
     def extract_vocals(self, chunk_path: str) -> None:
         """
-        Extracts vocals from audio file using spleeter library and store it in the temporary file(temp).
+        Extracts vocals from audio file using librosa and store it in the temporary file(temp).
 
         Parameters:
         -----------
