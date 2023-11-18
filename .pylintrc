@@ -1,0 +1,7 @@
+[MASTER]
+disable=  C0114, E0401, C0303
+         # missing-module-docstring,import error, trailing-whitespace
+
+
+[FORMAT]
+max-line-length=112
