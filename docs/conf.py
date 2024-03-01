@@ -1,13 +1,13 @@
 # pylint: disable=line-too-long, redefined-builtin, import-error, invalid-name
 #!/usr/bin/env python3
 """yt_audio_collector documentation build configuration file."""
-# import sys
+import sys
 
 import sphinx_rtd_theme
 
 from yt_audio_collector import __version__  # noqa
 
-# sys.path.append("..")
+sys.path.append("..")
 
 # -- General configuration ------------------------------------------------
 autodoc_mock_imports = [
