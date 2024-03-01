@@ -7,17 +7,17 @@ from __future__ import print_function
 import csv
 import json
 import os
+import sys
 from pathlib import Path
 
+sys.path.append("..")
 import librosa
 import numpy as np
 import soundfile as sf
 from pydub import AudioSegment
-from tqdm import tqdm
 
 from yt_audio_collector.constants import BASE_PATH
-from yt_audio_collector.utils.file_utils import (create_dir, load_json,
-                                                 resolve_path)
+from yt_audio_collector.utils.file_utils import create_dir, load_json, resolve_path
 
 
 class PreProcessAudio:
@@ -228,6 +228,6 @@ class PreProcessAudio:
         Traverses through all categories of audio and preprocess the audio.
         """
         create_dir(self.destination_path)
-        for category_path in tqdm(self.source_path.glob("*")):
+        for category_path in self.source_path.glob("*"):
             category_name = category_path.name
             self.preprocess_audio_chunks(category_name)
