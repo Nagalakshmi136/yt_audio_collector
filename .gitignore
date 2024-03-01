@@ -1,7 +1,10 @@
 output
 processed_output
 temp
-.ipynb
+*.ipynb
 __pycache__
 format.sh
 lint.sh
+.pylintrc
+.pytest_cache
+tests

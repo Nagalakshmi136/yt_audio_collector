@@ -49,11 +49,16 @@ Clone the repository through the terminal using the command below:
 ```shell
 git clone https://github.com/Nagalakshmi136/yt_audio_collector.git
 ```
-After cloning create an environment then install python=3.9 version. For example with conda:
 
-    $ conda create -n sample python=3.9
+create conda enviroment with the following command:  
 
-To install all the libraries in the pyproject.toml file of a cloned project, you should run the following command:
+    $ conda create --name yt-collector python=3.9
+
+If poetry not available install poetry:  
+
+    $ sudo apt install poetry
+
+Install required pacakages from poetry with the following command:  
 
     $ poetry install
 
