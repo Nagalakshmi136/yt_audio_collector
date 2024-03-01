@@ -7,10 +7,12 @@ import re
 import urllib.request
 from typing import List
 
+from tqdm import tqdm
 from youtube_transcript_api import YouTubeTranscriptApi
 
 from yt_audio_collector.constants import BASE_PATH
-from yt_audio_collector.system_1.valid_transcript import is_valid_hindi_transcript
+from yt_audio_collector.system_1.valid_transcript import \
+    is_valid_hindi_transcript
 from yt_audio_collector.system_1.video_to_audio import has_hindi_audio
 from yt_audio_collector.utils.file_utils import create_dir
 
@@ -81,7 +83,7 @@ class FetchValidYouTubeData:
         # Fetch all video ids for the given query
         video_ids = self.get_video_ids(query)
         transcript_results = {}
-        for video in video_ids:
+        for video in tqdm(video_ids):
             try:
                 # Fetch the hindi transcript for the video id using youtube_transcript_api library
                 transcript_list = YouTubeTranscriptApi.list_transcripts(video)

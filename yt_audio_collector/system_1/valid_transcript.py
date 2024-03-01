@@ -4,6 +4,8 @@
 import re
 from typing import List
 
+from tqdm import tqdm
+
 from yt_audio_collector.constants import HINDI_RE_PATTERN
 from yt_audio_collector.system_1.video_to_audio import duration_of_video
 
@@ -30,7 +32,7 @@ def is_valid_hindi_transcript(transcript: List[dict], video_id: str) -> bool:
     empty_text_count = 0
     hindi_to_total_text_ratio = 0
     subtitles_duration = 0
-    for i in range(transcript_length):
+    for i in tqdm(range(transcript_length)):
         transcript_text = transcript[i].get("text")
         # Check for empty transcript text
         if re.sub(r"[\s]+", "", transcript_text) == "":

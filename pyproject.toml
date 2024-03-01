@@ -1,7 +1,7 @@
 [tool.poetry]
 name = "yt_audio_collector"
-version = "0.1.0"
-description = "Create any language dataset for Speech Recognition from youtube"
+version = "1.0.0"
+description = "Create hindi language dataset for Speech Recognition from youtube"
 authors = ["Mannasamudram Nagalakshmi"]
 readme = "README.md"
 classifiers = [
@@ -10,21 +10,23 @@ classifiers = [
     "Operating System :: OS Independent",
 ]
 packages=[{include = "yt_audio_collector"}]
+keywords = ["hindi dataset", "yt_audio_collector", "youtube", "youtube hindi audio", "youtube hindi transcripts"]
+documentation = "https://nagalakshmi136.github.io/yt_audio_collector/"
+repository = "https://github.com/Nagalakshmi136/yt_audio_collector"
 
 [tool.poetry.dependencies]
 python = "^3.9"
 google-api-python-client = "^2.98.0"
 pytube = "^15.0.0"
-ffmpeg = "^1.4"
 youtube-transcript-api = "^0.6.1"
 pydub = "^0.25.1"
-plotly = "^5.17.0"
 librosa = "^0.10.1"
 openai-whisper = "^20230918"
-pytest = "^7.4.3"
 torch = [
   {url = "https://download.pytorch.org/whl/cu117/torch-2.0.0%2Bcu117-cp39-cp39-linux_x86_64.whl"},
 ]
+soundfile = "^0.12.1"
+numpy = ">=1.18.5,<=1.26.0"
 
 
 [build-system]
